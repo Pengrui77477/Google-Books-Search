@@ -15,7 +15,7 @@
                         <div class="content">
                             <div class="authors">{{checkType(item.volumeInfo.authors) === 'Array'?
                             item.volumeInfo.authors[0] : 'null'}}
-                            <p>{{item.volumeInfo.publishedDate}}</p>
+                                <p>{{item.volumeInfo.publishedDate}}</p>
                             </div>
                             <div class="descrition">
                                 {{item.volumeInfo?.description}}
@@ -40,21 +40,32 @@ import { getBooks } from '@/api/request';
 import { ref } from 'vue';
 import type { BookObj } from '@/type/bookList'
 import { checkType } from '@/utils/checkType'
+import { ElLoading, ElMessage } from 'element-plus'
 
 const bookName = ref('')
 const bookList = ref<BookObj[]>([])
-const searchBooks = async () => {
-    const res = await getBooks(bookName.value);
-    bookList.value = res.data.items
-    console.log(res.data);
-    // console.log(bookList.value);
 
+const searchBooks = async () => {
+    const loading = ElLoading.service({
+        lock: true,
+        text: '加载中',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    await getBooks(bookName.value).then((res) => {
+        bookList.value = res.data.items;
+        loading.close()
+    }).catch(err => {
+        console.log(err.message);
+        ElMessage.error('您的网络有波动,请刷新重试');
+        loading.close();
+    })
     bookList.value.forEach(x => {
         let res = checkType(x.volumeInfo.authors)
         console.log(res);
-
     })
 }
+const fullscreenLoading = ref(false)
+
 
 
 </script>
@@ -164,7 +175,8 @@ const searchBooks = async () => {
                     .title {
                         font-size: 24px;
                         font-weight: 600;
-                        height: 100%;text-align: center;
+                        height: 100%;
+                        text-align: center;
                     }
 
                     .content {
@@ -184,6 +196,7 @@ const searchBooks = async () => {
                 bottom: 0;
                 border-radius: 0;
                 padding: 0 15px;
+
                 .details {
                     display: flex;
                     flex-direction: column;
@@ -202,24 +215,28 @@ const searchBooks = async () => {
                     .content {
                         height: 75%;
                         display: block;
+
                         // margin-top: 5px;
-                        .authors{
+                        .authors {
                             margin-bottom: 10px;
                         }
+
                         .descrition {
                             display: -webkit-box;
                             -webkit-box-orient: vertical;
                             -webkit-line-clamp: 6;
                             overflow: hidden;
                             text-overflow: ellipsis;
-                            
+
                         }
-                        .more{
+
+                        .more {
                             position: absolute;
                             bottom: 10px;
-                            left:50%;
+                            left: 50%;
                             transform: translateX(-50%);
-                            a{
+
+                            a {
                                 text-decoration: none;
                             }
                         }

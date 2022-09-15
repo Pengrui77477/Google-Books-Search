@@ -23,8 +23,9 @@ import { RouterView, RouterLink } from 'vue-router';
   padding: 0;
   box-sizing: border-box;
 }
+html,
 body{
-  min-height: 100vh;
+  height: 100%;
   background:linear-gradient(45deg,#fbda61,#ff5acd);
   // background-color: linear-gradient();
 }
