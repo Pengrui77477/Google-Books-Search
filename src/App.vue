@@ -18,16 +18,44 @@ import { RouterView, RouterLink } from 'vue-router';
 </template>
 
 <style lang="less">
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+// }
+
+// body{
+//   min-height: 100vh;
+//   background: linear-gradient(45deg,#fa9038,rgb(20, 50, 250));
+//   // background-color: linear-gradient();
+// }
+// .app{
+//   height: 100%;
+// }
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+  &::selection {
+    background: transparentize(#42B883, 0.5);
+  }
 }
-html,
-body{
+
+body {
+    min-height: 100vh;
+    // background: #212534;
+    background: linear-gradient(45deg,#fa9038,rgb(20, 50, 250));
+    // display: flex;
+    // align-items: center;
+    // flex-direction: column;
+    // padding-top: 2rem;
+    // padding-bottom: 2rem;
+    box-sizing: border-box;
+}
+.app{
   height: 100%;
-  background:linear-gradient(45deg,#fbda61,#ff5acd);
-  // background-color: linear-gradient();
 }
 header {
   height: 150px;

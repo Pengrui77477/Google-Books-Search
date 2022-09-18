@@ -98,3 +98,8 @@ export interface IndustryIdentifier {
     type: string;
     identifier: string;
 }
+
+export interface QueryBook {
+    bookName: string;
+    num: number;
+}

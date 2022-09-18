@@ -1,17 +1,20 @@
 <template>
     <div class="books-box">
         <div class="books-box-search">
-            <input type="text" v-model="bookName" />
+            <input type="text" v-model="queryBook.bookName" />
             <input type="button" value="搜索" @click="searchBooks" />
         </div>
-        <div class="books-container">
-            <div class="card" v-for="item in bookList" :key="item.id">
+        <div class="books-container" >
+            <div class="card" v-for="item in bookList" :key="item.id" >
                 <div class="img-box">
                     <img :src="item.volumeInfo.imageLinks?.smallThumbnail" alt="image" />
                 </div>
-                <div class="details-box">
+                <div class="details-box" >
                     <div class="details">
-                        <div class="title">{{item.volumeInfo.title}}</div>
+                        <el-tooltip :content="item.volumeInfo.title" placement="top" >
+                            <div class="title">{{item.volumeInfo.title}}</div>
+                        </el-tooltip>
+
                         <div class="content">
                             <div class="authors">{{checkType(item.volumeInfo.authors) === 'Array'?
                             item.volumeInfo.authors[0] : 'null'}}
@@ -38,20 +41,23 @@
 import { RouterView, RouterLink } from 'vue-router';
 import { getBooks } from '@/api/request';
 import { ref } from 'vue';
-import type { BookObj } from '@/type/bookList'
+import type { BookObj,QueryBook } from '@/type/bookList'
 import { checkType } from '@/utils/checkType'
 import { ElLoading, ElMessage } from 'element-plus'
-
-const bookName = ref('')
+// const bookName = ref('')
 const bookList = ref<BookObj[]>([])
 
+const queryBook = ref({
+    bookName:'',
+    num:40
+})
 const searchBooks = async () => {
     const loading = ElLoading.service({
         lock: true,
         text: '加载中',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    await getBooks(bookName.value).then((res) => {
+    await getBooks(queryBook.value).then((res) => {
         bookList.value = res.data.items;
         loading.close()
     }).catch(err => {
@@ -64,7 +70,7 @@ const searchBooks = async () => {
         console.log(res);
     })
 }
-const fullscreenLoading = ref(false)
+
 
 
 
@@ -72,7 +78,7 @@ const fullscreenLoading = ref(false)
 
 <style scoped lang='less'>
 .books-box {
-    height: 100px;
+    // height: 100px;
     width: 80%;
     // display: flex;
     // justify-content: center;
@@ -115,11 +121,11 @@ const fullscreenLoading = ref(false)
     }
 
     .books-container {
-        height: 70vh;
+        // height: 70vh;
         width: 100%;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, 200px);
+        grid-template-rows: repeat(auto-fill, 300px);
         grid-auto-flow: dense;
         gap: 20px 20px;
 
@@ -185,12 +191,13 @@ const fullscreenLoading = ref(false)
                     }
                 }
             }
-
+            
             &:hover img {
                 opacity: 0;
             }
 
-            &:hover .details-box {
+            
+            &:hover .details-box , :deep(.el-tooltip__trigger):hover .details-box{
                 width: 100%;
                 height: 100%;
                 bottom: 0;
@@ -256,4 +263,7 @@ const fullscreenLoading = ref(false)
     }
 
 }
+// @media min-width {
+    
+// }
 </style>
